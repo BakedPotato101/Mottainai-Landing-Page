@@ -8,8 +8,13 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        "mottai-red": "#CD2424",
+        "mottai-tan": "#F8EEDB",
+        "mottai-white": "#FFFFFF",
+        "mottai-accent": "#dbb060",
+      },
+      fontFamily: {
+        body: ["Nunito"],
       },
     },
   },
