@@ -15,6 +15,7 @@ module.exports = {
       },
       fontFamily: {
         body: ["Nunito"],
+        special: ["Gloria Hallelujah"],
       },
     },
   },
