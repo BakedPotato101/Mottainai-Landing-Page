@@ -1,7 +1,8 @@
+import SupplierForm from "@/components/supplierform";
 export default function Login() {
-    return(
-        <div className="h-screen">
-
-        </div>
-    )
+  return (  
+    <div className="w-full text-center scroll-smooth">
+      <SupplierForm />
+    </div>
+  );
 }
