@@ -1,323 +1,167 @@
+"use client";
+import { useState } from "react";
+import MerchantInfo from "@/components/FormPages/merchantinfo";
+import ShopDetails from "@/components/FormPages/shopdetails";
+import AddressDetails from "@/components/FormPages/addressdetails";
+import PickupTimes from "@/components/FormPages/pickuptimes";
+import { CheckCircleIcon } from "@heroicons/react/20/solid";
+import { ChevronRightIcon } from "@heroicons/react/20/solid";
+
 export default function MerchantOnboardingForm() {
+  const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    description: "",
+    shop_name: "",
+    shop_logo_url: "",
+    shop_banner_url: "",
+    address_1: "",
+    address_2: "",
+    city: "",
+    state: "",
+    zipcode: "",
+    pickup_start_time: "",
+    pickup_end_time: "",
+  });
+
+  const steps = ["Merchant Info", "Shop Details", "Address", "Pickup Times"];
+
+  const handleNext = () => setStep((prev) => Math.min(prev + 1, steps.length));
+  const handlePrev = () => setStep((prev) => Math.max(prev - 1, 1));
+
+  const updateFormData = (newData) => {
+    setFormData((prev) => ({ ...prev, ...newData }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    console.log("Form data before sending:", formData);
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/merchants/register`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      const result = await response.json();
+      console.log("Server response:", result);
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
+  };
+
   return (
-    <form
-      className="flex flex-col items-center justify-center w-full bg-mottai-tan px-4 sm:px-6 md:px-8 lg:px-16"
-      method="POST"
-      encType="multipart/form-data"
-      action="https://mottainai-backend-production.up.railway.app/api/merchants"
-    >
-      <div className="w-full max-w-4xl space-y-12 pt-10">
-        {/* Section: Merchant Information */}
-        <div className="border-b border-gray-300 pb-8">
-          <h2 className="text-2xl font-bold text-gray-900">
-            Merchant Information
-          </h2>
-          <p className="mt-1 text-sm text-gray-600">
-            Fill in the required information to register your shop.
-          </p>
-
-          <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
-            {/* Email */}
-            <div className="sm:col-span-2">
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-900"
-              >
-                Email
-              </label>
-              <div className="mt-2">
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  required
-                  minLength={5}
-                  maxLength={50}
-                  className="block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:ring-mottai-red focus:border-mottai-red sm:text-sm"
-                />
-              </div>
+    <div className="w-full bg-mottai-tan pb-10 md:rounded-xl my-10 mx-0 md:mx-4 lg:mx-8">
+      {/* Status Bar */}
+      <div className="flex flex-wrap justify-center gap-4 py-4">
+        {steps.map((stepName, index) => (
+          <div
+            key={index}
+            className="flex items-center gap-x-2 text-sm sm:text-base"
+          >
+            <div
+              className={`w-8 h-8 flex items-center justify-center rounded-full border-2 ${
+                step > index
+                  ? "bg-mottai-red border-mottai-red text-white"
+                  : step === index + 1
+                  ? "border-mottai-red text-mottai-red"
+                  : "border-gray-300 text-gray-300"
+              }`}
+            >
+              {step > index ? (
+                <CheckCircleIcon className="w-5 h-5 sm:w-6 sm:h-6" />
+              ) : (
+                index + 1
+              )}
             </div>
-
-            {/* Password */}
-            <div className="sm:col-span-2">
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-900"
-              >
-                Password
-              </label>
-              <div className="mt-2">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  required
-                  minLength={8}
-                  maxLength={255}
-                  className="block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:ring-mottai-red focus:border-mottai-red sm:text-sm"
-                />
-              </div>
-            </div>
-
-            {/* Description */}
-            <div className="sm:col-span-2">
-              <label
-                htmlFor="description"
-                className="block text-sm font-medium text-gray-900"
-              >
-                Description
-              </label>
-              <div className="mt-2">
-                <textarea
-                  id="description"
-                  name="description"
-                  rows={4}
-                  required
-                  minLength={1}
-                  maxLength={255}
-                  className="block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:ring-mottai-red focus:border-mottai-red sm:text-sm"
-                />
-              </div>
-            </div>
+            {index < steps.length - 1 && (
+              <ChevronRightIcon
+                className={`w-5 h-5 sm:w-6 sm:h-6 ${
+                  step > index ? "text-mottai-red" : "text-gray-300"
+                }`}
+              />
+            )}
           </div>
-        </div>
-
-        {/* Section: Shop Details */}
-        <div className="border-b border-gray-300 pb-8">
-          <h2 className="text-lg font-semibold text-gray-900">Shop Details</h2>
-          <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
-            {/* Shop Name */}
-            <div className="sm:col-span-2">
-              <label
-                htmlFor="shop_name"
-                className="block text-sm font-medium text-gray-900"
-              >
-                Shop Name
-              </label>
-              <div className="mt-2">
-                <input
-                  id="shop_name"
-                  name="shop_name"
-                  type="text"
-                  required
-                  minLength={2}
-                  maxLength={50}
-                  className="block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:ring-mottai-red focus:border-mottai-red sm:text-sm"
-                />
-              </div>
-            </div>
-
-            {/* Shop Logo Upload */}
-            <div className="sm:col-span-2">
-              <label
-                htmlFor="shop_logo"
-                className="block text-sm font-medium text-gray-900"
-              >
-                Shop Logo
-              </label>
-              <div className="mt-2">
-                <input
-                  id="shop_logo"
-                  name="shop_logo"
-                  type="file"
-                  accept="image/*"
-                  required
-                  className="block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:ring-mottai-red focus:border-mottai-red sm:text-sm"
-                />
-              </div>
-            </div>
-
-            {/* Shop Banner Upload */}
-            <div className="sm:col-span-2">
-              <label
-                htmlFor="shop_banner"
-                className="block text-sm font-medium text-gray-900"
-              >
-                Shop Banner
-              </label>
-              <div className="mt-2">
-                <input
-                  id="shop_banner"
-                  name="shop_banner"
-                  type="file"
-                  accept="image/*"
-                  required
-                  className="block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:ring-mottai-red focus:border-mottai-red sm:text-sm"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Section: Address Details */}
-        <div className="border-b border-gray-300 pb-8">
-          <h2 className="text-lg font-semibold text-gray-900">
-            Address Details
-          </h2>
-          <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
-            {/* Address Line 1 */}
-            <div className="sm:col-span-2">
-              <label
-                htmlFor="address_1"
-                className="block text-sm font-medium text-gray-900"
-              >
-                Address Line 1
-              </label>
-              <div className="mt-2">
-                <input
-                  id="address_1"
-                  name="address_1"
-                  type="text"
-                  required
-                  minLength={5}
-                  maxLength={100}
-                  className="block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:ring-mottai-red focus:border-mottai-red sm:text-sm"
-                />
-              </div>
-            </div>
-
-            {/* Address Line 2 (Optional) */}
-            <div className="sm:col-span-2">
-              <label
-                htmlFor="address_2"
-                className="block text-sm font-medium text-gray-900"
-              >
-                Address Line 2 (Optional)
-              </label>
-              <div className="mt-2">
-                <input
-                  id="address_2"
-                  name="address_2"
-                  type="text"
-                  minLength={5}
-                  maxLength={100}
-                  className="block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:ring-mottai-red focus:border-mottai-red sm:text-sm"
-                />
-              </div>
-            </div>
-
-            {/* City */}
-            <div>
-              <label
-                htmlFor="city"
-                className="block text-sm font-medium text-gray-900"
-              >
-                City
-              </label>
-              <div className="mt-2">
-                <input
-                  id="city"
-                  name="city"
-                  type="text"
-                  required
-                  minLength={2}
-                  maxLength={50}
-                  className="block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:ring-mottai-red focus:border-mottai-red sm:text-sm"
-                />
-              </div>
-            </div>
-
-            {/* State */}
-            <div>
-              <label
-                htmlFor="state"
-                className="block text-sm font-medium text-gray-900"
-              >
-                State
-              </label>
-              <div className="mt-2">
-                <input
-                  id="state"
-                  name="state"
-                  type="text"
-                  required
-                  minLength={2}
-                  maxLength={50}
-                  className="block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:ring-mottai-red focus:border-mottai-red sm:text-sm"
-                />
-              </div>
-            </div>
-
-            {/* ZIP Code */}
-            <div>
-              <label
-                htmlFor="zipcode"
-                className="block text-sm font-medium text-gray-900"
-              >
-                ZIP Code
-              </label>
-              <div className="mt-2">
-                <input
-                  id="zipcode"
-                  name="zipcode"
-                  type="text"
-                  required
-                  minLength={5}
-                  maxLength={10}
-                  className="block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:ring-mottai-red focus:border-mottai-red sm:text-sm"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Section: Pickup Times */}
-        <div>
-          <h2 className="text-lg font-semibold text-gray-900">Pickup Times</h2>
-          <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
-            {/* Pickup Start Time */}
-            <div>
-              <label
-                htmlFor="pickup_start_time"
-                className="block text-sm font-medium text-gray-900"
-              >
-                Pickup Start Time
-              </label>
-              <div className="mt-2">
-                <input
-                  id="pickup_start_time"
-                  name="pickup_start_time"
-                  type="time"
-                  required
-                  className="block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:ring-mottai-red focus:border-mottai-red sm:text-sm"
-                />
-              </div>
-            </div>
-
-            {/* Pickup End Time */}
-            <div>
-              <label
-                htmlFor="pickup_end_time"
-                className="block text-sm font-medium text-gray-900"
-              >
-                Pickup End Time
-              </label>
-              <div className="mt-2">
-                <input
-                  id="pickup_end_time"
-                  name="pickup_end_time"
-                  type="time"
-                  required
-                  className="block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:ring-mottai-red focus:border-mottai-red sm:text-sm"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
+        ))}
       </div>
 
-      {/* Submit Button */}
-      <div className="mt-8 flex items-center justify-end gap-x-4">
-        <button type="button" className="text-sm font-medium text-gray-700">
-          Cancel
-        </button>
-        <button
-          type="submit"
-          className="inline-flex justify-center rounded-md border border-transparent bg-mottai-red py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-mottai-accent focus:outline-none focus:ring-2 focus:ring-mottai-red focus:ring-offset-2 transition-all"
-        >
-          Submit
-        </button>
-      </div>
-    </form>
+      {/* Form */}
+      <form
+        className="w-full max-w-4xl mx-auto px-4 sm:px-6 pt-4"
+        onSubmit={step === 4 ? handleSubmit : (e) => e.preventDefault()}
+      >
+        <div className="relative h-[600px] sm:h-[600px] md:h-[600px] lg:h-[600px] transition-all duration-500">
+          {step === 1 && (
+            <div className="absolute inset-0">
+              <MerchantInfo
+                formData={formData}
+                updateFormData={updateFormData}
+              />
+            </div>
+          )}
+          {step === 2 && (
+            <div className="absolute inset-0">
+              <ShopDetails
+                formData={formData}
+                updateFormData={updateFormData}
+              />
+            </div>
+          )}
+          {step === 3 && (
+            <div className="absolute inset-0">
+              <AddressDetails
+                formData={formData}
+                updateFormData={updateFormData}
+              />
+            </div>
+          )}
+          {step === 4 && (
+            <div className="absolute inset-0">
+              <PickupTimes
+                formData={formData}
+                updateFormData={updateFormData}
+              />
+            </div>
+          )}
+        </div>
+
+        {/* Navigation Buttons */}
+        <div className="mt-8 flex flex-col sm:flex-row items-center sm:justify-between gap-4">
+          {step > 1 && (
+            <button
+              type="button"
+              onClick={handlePrev}
+              className="text-sm sm:text-base font-medium text-gray-700 bg-white border border-gray-300 py-2 px-4 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-mottai-red focus:ring-offset-2"
+            >
+              Previous
+            </button>
+          )}
+          {step < steps.length ? (
+            <button
+              type="button"
+              onClick={handleNext}
+              className="text-sm sm:text-base font-medium bg-mottai-red text-white py-2 px-4 rounded-md shadow-sm hover:bg-mottai-accent focus:outline-none focus:ring-2 focus:ring-mottai-red focus:ring-offset-2"
+            >
+              Next
+            </button>
+          ) : (
+            <button
+              type="submit"
+              className="text-sm sm:text-base font-medium bg-mottai-red text-white py-2 px-4 rounded-md shadow-sm hover:bg-mottai-accent focus:outline-none focus:ring-2 focus:ring-mottai-red focus:ring-offset-2"
+            >
+              Submit
+            </button>
+          )}
+        </div>
+      </form>
+    </div>
   );
 }
