@@ -1,7 +1,14 @@
+import Select from "react-select";
+import { stateCodes } from "@/utils/stateCodes";
+
 export default function AddressDetails({ formData, updateFormData }) {
   const handleChange = (e) => {
     const { name, value } = e.target;
     updateFormData({ [name]: value });
+  };
+
+  const handleSelectChange = (field, selectedOption) => {
+    updateFormData({ [field]: selectedOption.value });
   };
 
   return (
@@ -61,6 +68,7 @@ export default function AddressDetails({ formData, updateFormData }) {
           />
         </div>
 
+        {/* State */}
         <div>
           <label
             htmlFor="state"
@@ -68,14 +76,16 @@ export default function AddressDetails({ formData, updateFormData }) {
           >
             State
           </label>
-          <input
+          <Select
             id="state"
             name="state"
-            type="text"
-            value={formData.state}
-            onChange={handleChange}
-            required
-            className="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-mottai-red focus:ring-mottai-red sm:text-sm"
+            options={stateCodes}
+            value={stateCodes.find((option) => option.value === formData.state)}
+            onChange={(selectedOption) =>
+              handleSelectChange("state", selectedOption)
+            }
+            placeholder="Select a state"
+            className="mt-2 block w-full rounded-md shadow-sm sm:text-sm"
           />
         </div>
 
@@ -97,6 +107,7 @@ export default function AddressDetails({ formData, updateFormData }) {
           />
         </div>
 
+        {/* Country */}
         <div className="sm:col-span-2">
           <label
             htmlFor="country"
@@ -104,14 +115,20 @@ export default function AddressDetails({ formData, updateFormData }) {
           >
             Country
           </label>
-          <input
+          <Select
             id="country"
             name="country"
-            type="text"
-            value={formData.country}
-            onChange={handleChange}
-            required
-            className="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-mottai-red focus:ring-mottai-red sm:text-sm"
+            options={[{ value: "United States", label: "United States" }]}
+            value={
+              formData.country
+                ? { value: formData.country, label: formData.country }
+                : null
+            }
+            onChange={(selectedOption) =>
+              handleSelectChange("country", selectedOption)
+            }
+            placeholder="Select a country"
+            className="mt-2 block w-full rounded-md shadow-sm sm:text-sm"
           />
         </div>
       </div>

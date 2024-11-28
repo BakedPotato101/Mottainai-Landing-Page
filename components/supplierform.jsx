@@ -37,7 +37,10 @@ export default function MerchantOnboardingForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log("Form data before sending:", formData);
+    // Exclude confirm_password from the form data
+    const { confirm_password, ...dataToSend } = formData;
+
+    console.log("Form data being sent:", dataToSend);
 
     try {
       const response = await fetch(
@@ -47,19 +50,20 @@ export default function MerchantOnboardingForm() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(dataToSend),
         }
       );
 
       const result = await response.json();
       console.log("Server response:", result);
+      localStorage.setItem("merchant_token", result.token);
     } catch (error) {
       console.error("Error submitting form:", error);
     }
   };
 
   return (
-    <div className="w-full bg-mottai-tan pb-10 md:rounded-xl my-10 mx-0 md:mx-4 lg:mx-8">
+    <div className="w-full bg-mottai-tan pb-10 md:rounded-xl my-10 mx-0 md:mx-4 lg:mx-8 xl:mx-64 xl:mb-auto">
       {/* Status Bar */}
       <div className="flex flex-wrap justify-center gap-4 py-4">
         {steps.map((stepName, index) => (
@@ -95,10 +99,10 @@ export default function MerchantOnboardingForm() {
 
       {/* Form */}
       <form
-        className="w-full max-w-4xl mx-auto px-4 sm:px-6 pt-4"
+        className="w-full max-w-5xl mx-auto px-4 sm:px-6 pt-4"
         onSubmit={step === 4 ? handleSubmit : (e) => e.preventDefault()}
       >
-        <div className="relative h-[600px] sm:h-[600px] md:h-[600px] lg:h-[600px] transition-all duration-500">
+        <div className="relative h-[750px] sm:h-[600px] md:h-[600px] lg:h-[600px] transition-all duration-500">
           {step === 1 && (
             <div className="absolute inset-0">
               <MerchantInfo

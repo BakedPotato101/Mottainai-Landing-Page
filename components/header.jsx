@@ -47,8 +47,8 @@ export default function Header() {
           ))}
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <a href="login" className="text-lg font-semibold text-gray-900">
-            Supplier Log in <span aria-hidden="true">&rarr;</span>
+          <a href="signup" className="text-lg font-semibold text-gray-900">
+            Supplier Sign Up<span aria-hidden="true">&rarr;</span>
           </a>
         </div>
       </nav>
@@ -89,10 +89,10 @@ export default function Header() {
               </div>
               <div className="py-6">
                 <a
-                  href="/login"
+                  href="/signup"
                   className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
                 >
-                  Supplier Log in
+                  Supplier Sign Up
                 </a>
               </div>
             </div>
