@@ -25,7 +25,7 @@ export default function SignUp() {
 
   return (
     <div className="w-full h-screen text-center flex justify-center items-center scroll-smooth">
-      {token ? <Success /> : <SupplierForm />}
+      {token && token !== "undefined" ? <Success /> : <SupplierForm />}
     </div>
   );
 }

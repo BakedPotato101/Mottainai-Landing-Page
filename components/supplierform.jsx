@@ -4,13 +4,13 @@ import MerchantInfo from "@/components/FormPages/merchantinfo";
 import ShopDetails from "@/components/FormPages/shopdetails";
 import AddressDetails from "@/components/FormPages/addressdetails";
 import PickupTimes from "@/components/FormPages/pickuptimes";
-import { CheckCircleIcon } from "@heroicons/react/20/solid";
-import { ChevronRightIcon } from "@heroicons/react/20/solid";
+import { CheckCircleIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 
 export default function MerchantOnboardingForm() {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     email: "",
+    phone_number: "",
     password: "",
     description: "",
     shop_name: "",
@@ -24,11 +24,70 @@ export default function MerchantOnboardingForm() {
     pickup_start_time: "",
     pickup_end_time: "",
   });
+  const [errors, setErrors] = useState({});
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const steps = ["Merchant Info", "Shop Details", "Address", "Pickup Times"];
 
-  const handleNext = () => setStep((prev) => Math.min(prev + 1, steps.length));
-  const handlePrev = () => setStep((prev) => Math.max(prev - 1, 1));
+  const validatePasswords = () => {
+    if (!formData.password) {
+      return "Password is required.";
+    }
+    if (formData.password !== confirmPassword) {
+      return "Passwords do not match.";
+    }
+    return null; // No password errors
+  };
+
+  const validateStep = () => {
+    const newErrors = {};
+    const phoneNumberPattern = /^[0-9]{3}-[0-9]{3}-[0-9]{4}$/; // Example: 123-456-7890
+
+    if (step === 1) {
+      if (!formData.email) newErrors.email = "Email is required.";
+      if (!formData.phone_number) {
+        newErrors.phone_number = "Phone number is required.";
+      } else if (!phoneNumberPattern.test(formData.phone_number)) {
+        newErrors.phone_number =
+          "Phone number must be in the format 123-456-7890.";
+      }
+      const passwordError = validatePasswords();
+      if (passwordError) newErrors.password = passwordError;
+    } else if (step === 2) {
+      if (!formData.shop_name) newErrors.shop_name = "Shop name is required.";
+      if (!formData.shop_logo_url)
+        newErrors.shop_logo_url = "Shop logo URL is required.";
+      if (!formData.shop_banner_url)
+        newErrors.shop_banner_url = "Shop banner URL is required.";
+    } else if (step === 3) {
+      if (!formData.address_1)
+        newErrors.address_1 = "Address line 1 is required.";
+      if (!formData.city) newErrors.city = "City is required.";
+      if (!formData.state) newErrors.state = "State is required.";
+      if (!formData.zipcode) newErrors.zipcode = "ZIP Code is required.";
+    } else if (step === 4) {
+      if (!formData.pickup_start_time)
+        newErrors.pickup_start_time = "Pickup start time is required.";
+      if (!formData.pickup_end_time)
+        newErrors.pickup_end_time = "Pickup end time is required.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+
+  const handleNext = () => {
+    if (validateStep()) {
+      setErrors({});
+      setStep((prev) => Math.min(prev + 1, steps.length));
+    }
+  };
+
+  const handlePrev = () => {
+    setErrors({});
+    setStep((prev) => Math.max(prev - 1, 1));
+  };
 
   const updateFormData = (newData) => {
     setFormData((prev) => ({ ...prev, ...newData }));
@@ -36,11 +95,7 @@ export default function MerchantOnboardingForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Exclude confirm_password from the form data
-    const { confirm_password, ...dataToSend } = formData;
-
-    console.log("Form data being sent:", dataToSend);
+    if (!validateStep()) return;
 
     try {
       const response = await fetch(
@@ -50,20 +105,26 @@ export default function MerchantOnboardingForm() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(dataToSend),
+          body: JSON.stringify(formData),
         }
       );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "An error occurred.");
+      }
 
       const result = await response.json();
       console.log("Server response:", result);
       localStorage.setItem("merchant_token", result.token);
     } catch (error) {
       console.error("Error submitting form:", error);
+      setErrors({ server: error.message });
     }
   };
 
   return (
-    <div className="w-full bg-mottai-tan pb-10 md:rounded-xl my-10 mx-0 md:mx-4 lg:mx-8 xl:mx-64 xl:mb-auto">
+    <div className="w-full bg-mottai-tan pb-10 md:rounded-xl my-10 mx-4 lg:mx-8 xl:mx-64 xl:mb-auto">
       {/* Status Bar */}
       <div className="flex flex-wrap justify-center gap-4 py-4">
         {steps.map((stepName, index) => (
@@ -102,38 +163,41 @@ export default function MerchantOnboardingForm() {
         className="w-full max-w-5xl mx-auto px-4 sm:px-6 pt-4"
         onSubmit={step === 4 ? handleSubmit : (e) => e.preventDefault()}
       >
-        <div className="relative h-[750px] sm:h-[600px] md:h-[600px] lg:h-[600px] transition-all duration-500">
+        {errors.server && (
+          <div className="mb-4 p-4 bg-red-100 text-red-700 rounded-md">
+            {errors.server}
+          </div>
+        )}
+        <div className="relative h-[750px] sm:h-[600px] transition-all duration-500">
           {step === 1 && (
-            <div className="absolute inset-0">
-              <MerchantInfo
-                formData={formData}
-                updateFormData={updateFormData}
-              />
-            </div>
+            <MerchantInfo
+              formData={formData}
+              updateFormData={updateFormData}
+              confirmPassword={confirmPassword}
+              setConfirmPassword={setConfirmPassword}
+              errors={errors}
+            />
           )}
           {step === 2 && (
-            <div className="absolute inset-0">
-              <ShopDetails
-                formData={formData}
-                updateFormData={updateFormData}
-              />
-            </div>
+            <ShopDetails
+              formData={formData}
+              updateFormData={updateFormData}
+              errors={errors}
+            />
           )}
           {step === 3 && (
-            <div className="absolute inset-0">
-              <AddressDetails
-                formData={formData}
-                updateFormData={updateFormData}
-              />
-            </div>
+            <AddressDetails
+              formData={formData}
+              updateFormData={updateFormData}
+              errors={errors}
+            />
           )}
           {step === 4 && (
-            <div className="absolute inset-0">
-              <PickupTimes
-                formData={formData}
-                updateFormData={updateFormData}
-              />
-            </div>
+            <PickupTimes
+              formData={formData}
+              updateFormData={updateFormData}
+              errors={errors}
+            />
           )}
         </div>
 

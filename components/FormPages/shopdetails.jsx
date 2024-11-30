@@ -63,6 +63,24 @@ export default function ShopDetails({ formData, updateFormData }) {
             className="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-mottai-red focus:ring-mottai-red sm:text-sm"
           />
         </div>
+        {/* Description */}
+        <div className="sm:col-span-2">
+          <label
+            htmlFor="description"
+            className="block text-sm font-medium text-gray-900"
+          >
+            Description
+          </label>
+          <textarea
+            id="description"
+            name="description"
+            rows={4}
+            value={formData.description}
+            onChange={handleChange}
+            required
+            className="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-mottai-red focus:ring-mottai-red sm:text-sm"
+          />
+        </div>
       </div>
     </div>
   );
