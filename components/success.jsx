@@ -1,3 +1,4 @@
+"use client";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 
 export default function Success() {
@@ -10,8 +11,26 @@ export default function Success() {
         Thank you for signing up!
       </h2>
       <p className="text-sm sm:text-base md:text-lg text-gray-500 text-center mt-2">
-        We will review your application and get back to you shortly.
+        Your account has been created successfully.
       </p>
+      <a
+        href="#"
+        className="mt-4 mx-auto rounded-full bg-mottai-red px-8 py-2 text-lg font-semibold text-white shadow-sm hover:bg-mottai-accent transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+      >
+        Download the app
+      </a>
+      {/* sign out button */}
+      <button
+        type="button"
+        onClick={() => {
+          localStorage.removeItem("merchant_token");
+          window.location.href = "/";
+        }}
+
+        className="mt-4 text-sm sm:text-base font-medium bg-mottai-red text-white py-2 px-4 rounded-md shadow-sm hover:bg-mottai-accent focus:outline-none focus:ring-2 focus:ring-mottai-red focus:ring-offset-2"
+      >
+        Sign Out
+      </button>
     </div>
   );
 }

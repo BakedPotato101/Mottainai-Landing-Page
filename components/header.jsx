@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Dialog, DialogPanel } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
@@ -11,7 +11,14 @@ const navigation = [
 ];
 
 export default function Header() {
+  const [merchant_token, setMerchantToken] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  useEffect(() => {
+    setMerchantToken(localStorage.getItem("merchant_token"));
+    window.addEventListener("storage", () => {
+      setMerchantToken(localStorage.getItem("merchant_token"));
+    });
+  }, []);
 
   return (
     <header className="bg-mottai-white">
@@ -47,9 +54,15 @@ export default function Header() {
           ))}
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <a href="signup" className="text-lg font-semibold text-gray-900">
-            Supplier Sign Up<span aria-hidden="true">&rarr;</span>
-          </a>
+          {merchant_token === null || merchant_token === "Undefined" ? (
+            <a href="signup" className="text-lg font-semibold text-gray-900">
+              Supplier Sign Up<span aria-hidden="true">&rarr;</span>
+            </a>
+          ) : (
+            <a href="account" className="text-lg font-semibold text-gray-900">
+              Account<span aria-hidden="true">&rarr;</span>
+            </a>
+          )}
         </div>
       </nav>
       <Dialog
@@ -88,12 +101,21 @@ export default function Header() {
                 ))}
               </div>
               <div className="py-6">
-                <a
-                  href="/signup"
-                  className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
-                >
-                  Supplier Sign Up
-                </a>
+                {merchant_token === null || merchant_token === "Undefined" ? (
+                  <a
+                    href="/signup"
+                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
+                  >
+                    Supplier Sign Up
+                  </a>
+                ) : (
+                  <a
+                    href="/account"
+                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
+                  >
+                    Account
+                  </a>
+                )}
               </div>
             </div>
           </div>

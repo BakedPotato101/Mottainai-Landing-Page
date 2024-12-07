@@ -124,7 +124,7 @@ export default function MerchantOnboardingForm() {
   };
 
   return (
-    <div className="w-full bg-mottai-tan pb-10 md:rounded-xl my-10 mx-4 lg:mx-8 xl:mx-64 xl:mb-auto">
+    <div className="w-full bg-mottai-tan pb-10 md:rounded-xl my-0 mx-0 md:my-5 md:mx-12 lg:mx-32 xl:mx-80 xl:mb-auto">
       {/* Status Bar */}
       <div className="flex flex-wrap justify-center gap-4 py-4">
         {steps.map((stepName, index) => (
@@ -222,7 +222,8 @@ export default function MerchantOnboardingForm() {
             </button>
           ) : (
             <button
-              type="submit"
+              type="button"
+              onClick={handleSubmit}
               className="text-sm sm:text-base font-medium bg-mottai-red text-white py-2 px-4 rounded-md shadow-sm hover:bg-mottai-accent focus:outline-none focus:ring-2 focus:ring-mottai-red focus:ring-offset-2"
             >
               Submit

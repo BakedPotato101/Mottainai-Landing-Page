@@ -8,22 +8,7 @@ export default function Hero() {
               <h1 className="text-7xl font-special tracking-tight text-gray-900 sm:text-8xl">
                 Let's Save <br /> Some Food!
               </h1>
-              {/* Squiggly Line */}
-              {/* <svg
-                className="absolute -bottom-2 left-0 w-full h-8"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 800 40"
-                fill="none"
-              >
-                <path
-                  d="M0 20c40-20 80 20 120 0s80-20 120 0 80 20 120 0 80-20 120 0 80 20 120 0 80-20 120 0 80 20 120 0"
-                  stroke="#CD2424"
-                  strokeWidth="3"
-                  strokeOpacity="0.6"
-                  fill="none"
-                />
-              </svg> */}
-              <img src="/underline.png" className=""/>
+              <img src="/underline.png" className="" />
             </div>
             <p className="mt-4 text-lg text-gray-700">
               Mottai helps local restaurants save food and money while reducing
