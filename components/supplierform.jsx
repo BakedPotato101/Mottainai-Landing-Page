@@ -124,7 +124,7 @@ export default function MerchantOnboardingForm() {
   };
 
   return (
-    <div className="w-full bg-mottai-tan pb-10 md:rounded-xl my-0 mx-0 md:my-5 md:mx-12 lg:mx-32 xl:mx-80 xl:mb-auto">
+    <div className="bg-mottai-tan md:rounded-xl pb-10 my-0 mx-0 md:my-5 md:mx-12 lg:mx-32 xl:mx-80 xl:mb-auto">
       {/* Status Bar */}
       <div className="flex flex-wrap justify-center gap-4 py-4">
         {steps.map((stepName, index) => (
@@ -202,7 +202,7 @@ export default function MerchantOnboardingForm() {
         </div>
 
         {/* Navigation Buttons */}
-        <div className="mt-8 flex flex-col sm:flex-row items-center sm:justify-between gap-4">
+        <div className="flex flex-col sm:flex-row items-center sm:justify-between gap-4">
           {step > 1 && (
             <button
               type="button"

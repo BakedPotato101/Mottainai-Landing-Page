@@ -4,29 +4,29 @@ import Success from "@/components/success";
 import SupplierForm from "@/components/supplierform";
 
 export default function SignUp() {
-  const [token, setToken] = useState(null); // State to hold the token
-  const [isCheckingToken, setIsCheckingToken] = useState(true); // Loading state for token check
+  const [token, setToken] = useState(null);
+  const [isCheckingToken, setIsCheckingToken] = useState(true);
 
   useEffect(() => {
-    // Check for the token on mount
     const storedToken = localStorage.getItem("merchant_token");
     setToken(storedToken);
-    setIsCheckingToken(false); // Token check is complete
+    setIsCheckingToken(false);
   }, []);
 
   if (isCheckingToken) {
-    // Show a loading state until token check is complete
     return (
       <div className="w-full h-screen flex justify-center items-center">
-        <p>Loading...</p>
+        <p className="text-lg font-semibold">Loading...</p>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <main className="flex-grow flex justify-center items-start">
-        {token && token !== "undefined" ? <Success /> : <SupplierForm />}
+    <div className="flex flex-col min-h-screen bg-mottai-red">
+      <main className="flex flex-grow justify-center items-center py-12">
+        <div className="w-screen px-6 sm:px-12">
+          {token && token !== "undefined" ? <Success /> : <SupplierForm />}
+        </div>
       </main>
     </div>
   );

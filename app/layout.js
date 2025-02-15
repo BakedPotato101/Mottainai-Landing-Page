@@ -15,9 +15,11 @@ export default function RootLayout({ children }) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
-      <body className="bg-mottai-red font-body text-4xl w-full h-full">
+      <body className="bg-mottai-red font-body text-4xl w-full min-h-screen flex flex-col">
         <Header />
-        {children}
+        <main className="flex-1 flex items-center justify-center">
+          {children}
+        </main>
         <Footer />
         <Analytics />
         <SpeedInsights />

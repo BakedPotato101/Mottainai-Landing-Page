@@ -8,6 +8,7 @@ const navigation = [
   { name: "Foodies", href: "/#mission" },
   { name: "Suppliers", href: "/#mission" },
   { name: "About Us", href: "/#mission" },
+  { name: "Supplier Login", href: "/login" },
 ];
 
 export default function Header() {

@@ -60,6 +60,7 @@ export default function MerchantInfo({
             id="phone_number"
             name="phone_number"
             type="tel"
+            placeholder="123-456-7890"
             value={formData.phone_number}
             onChange={handleChange}
             required
