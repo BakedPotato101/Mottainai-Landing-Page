@@ -12,7 +12,7 @@ const navigation = [
 ];
 
 export default function Header() {
-  const [merchant_token, setMerchantToken] = useState("");
+  const [merchant_token, setMerchantToken] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   useEffect(() => {
     setMerchantToken(localStorage.getItem("merchant_token"));
